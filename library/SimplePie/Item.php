@@ -407,6 +407,39 @@ class SimplePie_Item
 		}
 	}
 
+
+    /**
+	 * Get the images from the item
+
+     * @param bool $content_only
+     *
+     * @return null|string
+     */
+    public function get_images($content_only = false)
+    {
+        if ($return = $this->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_10, 'image'))
+        {
+            return $this->sanitize($return[0]['data'], $this->registry->call('Misc', 'atom_10_content_construct_type', array($return[0]['attribs'])), $this->get_base($return[0]));
+        }
+        elseif ($return = $this->get_item_tags(SIMPLEPIE_NAMESPACE_ATOM_03, 'image'))
+        {
+            return $this->sanitize($return[0]['data'], $this->registry->call('Misc', 'atom_03_construct_type', array($return[0]['attribs'])), $this->get_base($return[0]));
+        }
+        elseif ($return = $this->get_item_tags(SIMPLEPIE_NAMESPACE_RSS_10_MODULES_CONTENT, 'image'))
+        {
+            return $this->sanitize($return[0]['data'], SIMPLEPIE_CONSTRUCT_HTML, $this->get_base($return[0]));
+        }
+        elseif (!$content_only)
+        {
+            return $this->get_description(true);
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+
 	/**
 	 * Get a category for the item
 	 *
